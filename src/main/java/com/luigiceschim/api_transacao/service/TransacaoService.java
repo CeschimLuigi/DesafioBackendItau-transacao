@@ -33,7 +33,15 @@ public class TransacaoService {
 
         listaTransacoes.add(dto);
 
-
     }
+
+    public void deletarTransacoes(){
+
+        log.info("Todas as informações foram apagadas com sucesso");
+
+        listaTransacoes.clear();
+    }
+
+
 
 }
