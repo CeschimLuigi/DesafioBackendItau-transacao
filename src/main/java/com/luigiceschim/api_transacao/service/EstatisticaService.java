@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.OffsetDateTime;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -24,26 +25,31 @@ public class EstatisticaService {
 
     public EstatisticaResponseDTO obterEstatistica(Integer intervaloBusca){
 
-        log.info("Iniciada a busca das estatistícas neste intervalo de tempo: {} Segundos", intervaloBusca);
+        log.info("Iniciada a busca das estatísticas neste intervalo de tempo: {} Segundos", intervaloBusca);
 
         List<TransacaoRequestDTO>listaTransacoes = service.getListaTransacoes();
 
-        DoubleSummaryStatistics estatistica = listaTransacoes
+        List<TransacaoRequestDTO> transacoesFiltradas = listaTransacoes
                 .stream()
                 .filter(transacao -> transacao.dataHora()
                         .isAfter(OffsetDateTime.now()
-                                .minusSeconds(intervaloBusca)))
-                .mapToDouble(TransacaoRequestDTO::valor)
-                .summaryStatistics();
+                                .minusSeconds(intervaloBusca))).toList();
 
-        if (estatistica.getCount() == 0){
+
+
+        if (transacoesFiltradas.isEmpty()){
 
             log.info("Não há registros neste intervalo de tempo: {} Segundos", intervaloBusca);
 
             return new EstatisticaResponseDTO(0,0.0,0.0,0.0,0.0);
         }
 
-        log.info("Estatistícas processadas com sucesso");
+        DoubleSummaryStatistics estatistica = transacoesFiltradas
+                .stream()
+                .mapToDouble(TransacaoRequestDTO::valor)
+                .summaryStatistics();
+
+        log.info("Estatísticas processadas com sucesso");
         return new  EstatisticaResponseDTO((int) estatistica.getCount(),
                 estatistica.getSum(),
                 estatistica.getAverage(),
