@@ -2,7 +2,7 @@ package com.luigiceschim.api_transacao.service;
 
 import com.luigiceschim.api_transacao.dto.TransacaoRequestDTO;
 import com.luigiceschim.api_transacao.exception.UnprocessableEntity;
-import lombok.RequiredArgsConstructor;
+import com.luigiceschim.api_transacao.interfaces.ITransacaoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
-public class TransacaoService {
+public class TransacaoService implements ITransacaoService {
 
-    private final List<TransacaoRequestDTO>listaTransacoes = new ArrayList<>();
+    private List<TransacaoRequestDTO>listaTransacoes = new ArrayList<>();
 
+
+    @Override
+    public List<TransacaoRequestDTO> getListaTransacoes() {
+        return listaTransacoes;
+    }
+
+    @Override
     public void adicionarTransacoes(TransacaoRequestDTO dto){
 
-        log.info("Iniciando processo de persistencia de transacoes");
+        log.info("Iniciando processo de persistência de transações");
 
         if (dto.dataHora().isAfter(OffsetDateTime.now())){
 
@@ -34,13 +40,15 @@ public class TransacaoService {
         listaTransacoes.add(dto);
 
     }
-
+    @Override
     public void deletarTransacoes(){
 
         log.info("Todas as informações foram apagadas com sucesso");
 
         listaTransacoes.clear();
     }
+
+
 
 
 
