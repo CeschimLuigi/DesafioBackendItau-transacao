@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.time.OffsetDateTime;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -24,6 +23,7 @@ public class EstatisticaService {
     }
 
     public EstatisticaResponseDTO obterEstatistica(Integer intervaloBusca){
+        long startTime = System.currentTimeMillis();
 
         log.info("Iniciada a busca das estatísticas neste intervalo de tempo: {} Segundos", intervaloBusca);
 
@@ -41,6 +41,10 @@ public class EstatisticaService {
 
             log.info("Não há registros neste intervalo de tempo: {} Segundos", intervaloBusca);
 
+            long endTime = System.currentTimeMillis();
+            long duration = endTime - startTime;
+            log.info("Tempo gasto para calcular as estatísticas: {} ms", duration);
+
             return new EstatisticaResponseDTO(0,0.0,0.0,0.0,0.0);
         }
 
@@ -48,6 +52,10 @@ public class EstatisticaService {
                 .stream()
                 .mapToDouble(TransacaoRequestDTO::valor)
                 .summaryStatistics();
+
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        log.info("Tempo gasto para calcular as estatísticas: {} ms", duration);
 
         log.info("Estatísticas processadas com sucesso");
         return new  EstatisticaResponseDTO((int) estatistica.getCount(),
