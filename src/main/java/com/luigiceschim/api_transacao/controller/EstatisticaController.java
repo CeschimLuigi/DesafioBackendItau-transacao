@@ -1,7 +1,7 @@
 package com.luigiceschim.api_transacao.controller;
 
 import com.luigiceschim.api_transacao.dto.EstatisticaResponseDTO;
-import com.luigiceschim.api_transacao.service.EstatisticaService;
+import com.luigiceschim.api_transacao.interfaces.IEstatisticaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/estatistica")
 public class EstatisticaController {
 
-    @Autowired
-    private EstatisticaService service;
+
+    private final IEstatisticaService service;
+
+    public EstatisticaController(IEstatisticaService service) {
+        this.service = service;
+    }
 
     @GetMapping
     @Operation(description = "Endpoint responsavel por buscar estatisticas")

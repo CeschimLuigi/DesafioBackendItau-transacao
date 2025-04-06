@@ -1,8 +1,8 @@
 package com.luigiceschim.api_transacao.controller;
 
-import com.luigiceschim.api_transacao.dto.EstatisticaResponseDTO;
 import com.luigiceschim.api_transacao.dto.TransacaoRequestDTO;
-import com.luigiceschim.api_transacao.service.TransacaoService;
+import com.luigiceschim.api_transacao.interfaces.ITransacaoService;
+import com.luigiceschim.api_transacao.service.TransacaoServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/transacao")
 public class TransacaoController {
 
-    @Autowired
-    private TransacaoService service;
+
+    private final ITransacaoService service;
+
+    public TransacaoController(ITransacaoService service) {
+        this.service = service;
+    }
 
     @PostMapping
     @Operation(description = "Endpoint responsavel por adicionar transações")

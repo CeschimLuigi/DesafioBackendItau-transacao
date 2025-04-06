@@ -2,7 +2,8 @@ package com.luigiceschim.api_transacao.service;
 
 import com.luigiceschim.api_transacao.dto.TransacaoRequestDTO;
 import com.luigiceschim.api_transacao.dto.EstatisticaResponseDTO;
-import com.luigiceschim.api_transacao.interfaces.ITransacaoService;
+import com.luigiceschim.api_transacao.interfaces.IEstatisticaService;
+import com.luigiceschim.api_transacao.repository.TransacaoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,21 +14,25 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class EstatisticaService {
-
-    private final ITransacaoService service;
+public class EstatisticaServiceImpl implements IEstatisticaService {
 
     @Autowired
-    public EstatisticaService(ITransacaoService service) {
-        this.service = service;
+    private final TransacaoRepository repository;
+
+
+    public EstatisticaServiceImpl(TransacaoRepository repository) {
+        this.repository = repository;
     }
 
+
+    @Override
     public EstatisticaResponseDTO obterEstatistica(Integer intervaloBusca){
         long startTime = System.currentTimeMillis();
 
         log.info("Iniciada a busca das estatísticas neste intervalo de tempo: {} Segundos", intervaloBusca);
 
-        List<TransacaoRequestDTO>listaTransacoes = service.getListaTransacoes();
+
+        List<TransacaoRequestDTO>listaTransacoes = repository.getListaTransacoes();
 
         List<TransacaoRequestDTO> transacoesFiltradas = listaTransacoes
                 .stream()
